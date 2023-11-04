@@ -1,0 +1,42 @@
+{
+  "name": "newk",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Basedwon <basedwon@protonmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/frenware/utils/newk.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/frenware/utils/newk/issues"
+  },
+  "homepage": "https://gitlab.com/frenware/utils/newk#readme",
+  "main": "lib/newk.js",
+  "browser": {
+    ".": "./lib/newk.js"
+  },
+  "scripts": {
+    "dev:test": "nodemon -w ../.. -x npm test",
+    "dev:tester": "nodemon -w ../.. test/newk.test.js",
+    "dev": "nodemon -w ../.. test/newk.test.js",
+    "docs": "jsdoc2md \"lib/**/*.js\" > docs/api.md",
+    "update": "npm run update:prod && npm run update:dev",
+    "update:prod": "npm i -S basd@latest crpdo@latest",
+    "update:dev": "npm i -D @basd/testr@latest",
+    "test": "testr test"
+  },
+  "dependencies": {
+    "@basd/registry": "^0.0.1",
+    "basd": "^1.0.16",
+    "crpdo": "^1.0.8",
+    "nkn-sdk": "^1.3.1"
+  },
+  "devDependencies": {
+    "@basd/testr": "^0.1.2",
+    "@plaindb/storage": "^0.0.6",
+    "jsdoc": "^4.0.2",
+    "jsdoc-to-markdown": "^8.0.0"
+  },
+  "keywords": []
+}
