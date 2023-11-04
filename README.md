@@ -2,6 +2,8 @@
 
 # Newk
 
+> Weapon of Mass Decentralization
+
 [![npm](https://img.shields.io/npm/v/newk?style=flat&logo=npm)](https://www.npmjs.com/package/newk)
 [![pipeline](https://gitlab.com/basedwon/newk/badges/master/pipeline.svg)](https://gitlab.com/basedwon/newk/-/pipelines)
 [![license](https://img.shields.io/npm/l/newk)](https://gitlab.com/basedwon/newk/-/blob/master/LICENSE)
@@ -11,6 +13,9 @@
 [![Github](https://img.shields.io/badge/Github%20-%20?logo=github&color=%23383a40)](https://github.com/basedwon/newk)
 [![Twitter](https://img.shields.io/badge/@basdwon%20-%20?logo=twitter&color=%23383a40)](https://twitter.com/basdwon)
 [![Discord](https://img.shields.io/badge/Basedwon%20-%20?logo=discord&color=%23383a40)](https://discordapp.com/users/basedwon)
+
+
+A powerful JS library for building decentralized applications with a focus on ease of use and flexibility. It offers a straightforward API for messaging and pub/sub patterns, wrapped with decorators for additional functionalities like encryption and seeding. The `Newk` class is the entry point, and `NknConnect` is provided for establishing connections using nkn-multi-client.
 
 A JavaScript library that provides a flexible, transport-layer abstraction for various network protocols. By utilizing a base transport class, `newk` allows for easy extension and customization of network communication patterns. It comes with an NKN (New Kind of Network) transport implementation and supports message routing, publish/subscribe patterns, and basic message handling.
 
@@ -25,6 +30,65 @@ The `nkn-connect` module is a high-level wrapper designed to simplify interactio
 - Support for Pub/Sub mechanisms.
 - Extendable with various decorators for additional functionality.
 - Straightforward message routing.
+
+
+
+
+
+
+
+# Newk - JavaScript Networking Kit
+
+Newk is a flexible and extensible networking kit for JavaScript, which provides a suite of tools to build complex network applications. The kit is structured around transports, decorators, and a core routing mechanism that allows developers to handle networking protocols, message passing, and various patterns such as publish/subscribe and request/response.
+
+## Features
+
+- **Transport Layer Abstractions**: Newk abstracts the transport layer with a variety of implementations like `BusTransport` and `NknTransport`, enabling seamless communication across different network layers.
+- **Decorator Pattern**: Extend the functionality of your transports with decorators like `PubSubDecorator`, `EntryDecorator`, `SeederDecorator`, and `EncryptionDecorator`.
+- **Flexible Routing**: Use the built-in `Router` class to manage incoming and outgoing messages based on the action types.
+- **Message Encoding/Decoding**: Utilize `msgpack` encoding to efficiently serialize and deserialize message payloads.
+- **Subscription Management**: Methods to subscribe and unsubscribe to topics, as well as publish and broadcast messages to subscribers.
+- **Plug-and-Play**: Designed to be easily instantiated and utilized with minimal setup, using `Newk.init()` to create a ready-to-use instance.
+
+
+
+
+
+# newk
+
+
+
+## Features
+
+- **Transport Layer Abstraction**: Easily switch between transport layers for messaging.
+- **Decorator Pattern**: Extend functionality using decorators for pub/sub, encryption, and more.
+- **Router Support**: Includes a router for dispatching messages to handlers based on action types.
+- **Promise-based API**: All async operations return promises for easy chaining and use with async/await.
+- **Pub/Sub Mechanism**: Subscribe to topics and publish messages with ease.
+- **Plug & Play**: Intended to work with minimal configuration and easy initialization.
+
+
+
+
+
+
+# newk
+
+`newk` is a flexible transport and decorator-based networking toolkit for Node.js applications, providing a scalable foundation for building custom network protocols and data handling layers. It's built around a core set of classes that can be composed and extended to fit the needs of various networking scenarios.
+
+## Features
+
+- **Modular Transport Layer**: Use built-in transport mechanisms or plug in custom ones.
+- **Decorator Pattern**: Extend functionality through decorators for pub/sub mechanisms, encryption, and more.
+- **Routing**: Flexible routing capabilities to manage message paths.
+- **Subscription Mechanism**: Methods to subscribe and unsubscribe to topics with metadata support.
+- **Message Dispatching**: Send and dispatch messages with automatic encoding and decoding.
+- **Connection Handling**: Establish connections with built-in error and state management.
+
+
+
+
+
 
 ## Installation
 
@@ -165,24 +229,8 @@ Newk is [MIT licensed](https://gitlab.com/basedwon/newk/-/blob/master/LICENSE).
 
 
 
-# Newk - JavaScript Networking Kit
 
-Newk is a flexible and extensible networking kit for JavaScript, which provides a suite of tools to build complex network applications. The kit is structured around transports, decorators, and a core routing mechanism that allows developers to handle networking protocols, message passing, and various patterns such as publish/subscribe and request/response.
 
-## Features
-
-- **Transport Layer Abstractions**: Newk abstracts the transport layer with a variety of implementations like `BusTransport` and `NknTransport`, enabling seamless communication across different network layers.
-- **Decorator Pattern**: Extend the functionality of your transports with decorators like `PubSubDecorator`, `EntryDecorator`, `SeederDecorator`, and `EncryptionDecorator`.
-- **Flexible Routing**: Use the built-in `Router` class to manage incoming and outgoing messages based on the action types.
-- **Message Encoding/Decoding**: Utilize `msgpack` encoding to efficiently serialize and deserialize message payloads.
-- **Subscription Management**: Methods to subscribe and unsubscribe to topics, as well as publish and broadcast messages to subscribers.
-- **Plug-and-Play**: Designed to be easily instantiated and utilized with minimal setup, using `Newk.init()` to create a ready-to-use instance.
-
-## Installation
-
-```bash
-npm install newk
-```
 
 ## Usage
 
@@ -251,13 +299,6 @@ newkInstance.publish('news', 'Hello, this is the latest tech news!')
   });
 ```
 
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request with your improvements.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 
 
@@ -267,28 +308,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 
 
-
-
-# newk
-
-`newk` is a JavaScript library for building decentralized applications with a focus on ease of use and flexibility. It offers a straightforward API for messaging and pub/sub patterns, wrapped with decorators for additional functionalities like encryption and seeding. The `Newk` class is the entry point, and `NknConnect` is provided for establishing connections using nkn-multi-client.
-
-## Features
-
-- **Transport Layer Abstraction**: Easily switch between transport layers for messaging.
-- **Decorator Pattern**: Extend functionality using decorators for pub/sub, encryption, and more.
-- **Router Support**: Includes a router for dispatching messages to handlers based on action types.
-- **Promise-based API**: All async operations return promises for easy chaining and use with async/await.
-- **Pub/Sub Mechanism**: Subscribe to topics and publish messages with ease.
-- **Plug & Play**: Intended to work with minimal configuration and easy initialization.
-
-## Installation
-
-Install `newk` using npm:
-
-```sh
-npm install newk
-```
 
 ## Usage
 
@@ -368,13 +387,6 @@ Please refer to the following methods available on a `Newk` instance:
 
 `NknConnect` is a utility class provided to handle connections through nkn-multi-client. You generally won't interact with this class directly unless you need to work with nkn-multi-client features directly.
 
-## Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check [issues page](#).
-
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
 
 
 
@@ -395,31 +407,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 
 
-
-
-
-
-
-# newk
-
-`newk` is a flexible transport and decorator-based networking toolkit for Node.js applications, providing a scalable foundation for building custom network protocols and data handling layers. It's built around a core set of classes that can be composed and extended to fit the needs of various networking scenarios.
-
-## Features
-
-- **Modular Transport Layer**: Use built-in transport mechanisms or plug in custom ones.
-- **Decorator Pattern**: Extend functionality through decorators for pub/sub mechanisms, encryption, and more.
-- **Routing**: Flexible routing capabilities to manage message paths.
-- **Subscription Mechanism**: Methods to subscribe and unsubscribe to topics with metadata support.
-- **Message Dispatching**: Send and dispatch messages with automatic encoding and decoding.
-- **Connection Handling**: Establish connections with built-in error and state management.
-
-## Installation
-
-To use `newk` in your project, install it via npm:
-
-```bash
-npm install newk
-```
 
 ## Usage
 
@@ -485,16 +472,3 @@ You can use `onMessage`, `onConnect`, and `onWsError` methods to handle differen
 
 The API reference section would follow, detailing each method's parameters, returns, and any other relevant information. Since this is a high-level overview, refer to the source code or further documentation for in-depth details.
 
-## Contributing
-
-Contributions to `newk` are welcome. Please ensure you follow the coding standards and write tests for new features. To contribute:
-
-1. Fork the repository.
-2. Create your feature branch (`git checkout -b my-new-feature`).
-3. Commit your changes (`git commit -am 'Add some feature'`).
-4. Push to the branch (`git push origin my-new-feature`).
-5. Create a new Pull Request.
-
-## License
-
-`newk` is open-sourced software licensed under the [MIT license](LICENSE.md).
