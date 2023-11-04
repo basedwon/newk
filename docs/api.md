@@ -14,7 +14,8 @@ It defines common interface and logic for transports.
 This class is abstract and cannot be instantiated directly.</p>
 </dd>
 <dt><a href="#NknConnect">NknConnect</a></dt>
-<dd></dd>
+<dd><p>Highly persistent and fault-tolerant connection to the NKN network.</p>
+</dd>
 <dt><a href="#Entry">Entry</a></dt>
 <dd><p>Class representing an Entry for managing NKN node latency tests.</p>
 </dd>
@@ -452,6 +453,8 @@ Should be overridden by subclasses to return a specific type.
 <a name="NknConnect"></a>
 
 ## NknConnect
+Highly persistent and fault-tolerant connection to the NKN network.
+
 **Kind**: global class  
 
 * [NknConnect](#NknConnect)
