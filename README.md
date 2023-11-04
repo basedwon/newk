@@ -1,9 +1,4 @@
-<p align="center">
-  <img src="docs/newk.png" alt="Weapon of Mass Decentralization" title="Image Title" />
-</p>
-
-![alt text](docs/newk.png "Image Title")
-
+![Newk radioactive phone](docs/newk.png "Newk")
 
 # Newk
 
