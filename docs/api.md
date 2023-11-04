@@ -13,18 +13,25 @@ an existing transport object without modifying its structure.</p>
 It defines common interface and logic for transports.
 This class is abstract and cannot be instantiated directly.</p>
 </dd>
+<dt><a href="#PubSubDecorator">PubSubDecorator</a></dt>
+<dd><p>PubSubDecorator class that extends TransportDecorator to integrate pub/sub capabilities.
+It is designed to work with a transport layer that is compatible with the NKN network&#39;s pub/sub model.
+It adds persistent subscription and message capabilities to the transport.</p>
+</dd>
 <dt><a href="#NknConnect">NknConnect</a></dt>
-<dd><p>Highly persistent and fault-tolerant connection to the NKN network.</p>
+<dd><p>This class abstracts and encapsulates the logic required for establishing
+and maintaining a persistent connection with the NKN network, dealing with
+message reception, connection readiness, and WebSocket errors.</p>
 </dd>
 <dt><a href="#Entry">Entry</a></dt>
 <dd><p>Class representing an Entry for managing NKN node latency tests.</p>
 </dd>
-<dt><a href="#Seeder">Seeder</a></dt>
-<dd><p>Seeder class responsible for generating and testing NKN client seeds.</p>
-</dd>
 <dt><a href="#PubSubPersist">PubSubPersist</a></dt>
 <dd><p>Represents a persistent Pub/Sub manager with extended functionality.
 Inherits from the Evented class to allow for event-driven architecture.</p>
+</dd>
+<dt><a href="#Seeder">Seeder</a></dt>
+<dd><p>Seeder class responsible for generating and testing NKN client seeds.</p>
 </dd>
 <dt><a href="#Newk">Newk</a></dt>
 <dd><p>Main class for creating a network communication instance with various transport and decorator options.</p>
@@ -450,10 +457,89 @@ Should be overridden by subclasses to return a specific type.
 
 **Kind**: static property of [<code>BaseTransport</code>](#BaseTransport)  
 **Returns**: <code>string</code> \| <code>null</code> - The transport type.  
+<a name="PubSubDecorator"></a>
+
+## PubSubDecorator
+PubSubDecorator class that extends TransportDecorator to integrate pub/sub capabilities.
+It is designed to work with a transport layer that is compatible with the NKN network's pub/sub model.
+It adds persistent subscription and message capabilities to the transport.
+
+**Kind**: global class  
+
+* [PubSubDecorator](#PubSubDecorator)
+    * [new PubSubDecorator(transport, opts)](#new_PubSubDecorator_new)
+    * [.connect()](#PubSubDecorator+connect)
+    * [.subscribe(topic, metadata, num, fee, wallet, height)](#PubSubDecorator+subscribe) ⇒ <code>Promise.&lt;\*&gt;</code>
+    * [.unsubscribe(topic)](#PubSubDecorator+unsubscribe) ⇒ <code>Promise.&lt;\*&gt;</code>
+    * [.discover(topic, opts)](#PubSubDecorator+discover) ⇒ <code>Promise.&lt;Array&gt;</code>
+
+<a name="new_PubSubDecorator_new"></a>
+
+### new PubSubDecorator(transport, opts)
+Constructs the PubSubDecorator.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| transport | [<code>BaseTransport</code>](#BaseTransport) | The transport layer that this decorator extends. |
+| opts | <code>Object</code> | Options for the PubSubPersist and the decorator. |
+
+<a name="PubSubDecorator+connect"></a>
+
+### pubSubDecorator.connect()
+Connects to the pub/sub service, ensuring that the underlying transport is ready
+and starting the PubSubPersist service to handle persistent subscriptions.
+
+**Kind**: instance method of [<code>PubSubDecorator</code>](#PubSubDecorator)  
+<a name="PubSubDecorator+subscribe"></a>
+
+### pubSubDecorator.subscribe(topic, metadata, num, fee, wallet, height) ⇒ <code>Promise.&lt;\*&gt;</code>
+Subscribes to a topic with optional metadata and persistence parameters.
+If the underlying transport is NKN, it uses PubSubPersist to handle subscriptions.
+
+**Kind**: instance method of [<code>PubSubDecorator</code>](#PubSubDecorator)  
+**Returns**: <code>Promise.&lt;\*&gt;</code> - - A promise that resolves when the subscription is complete.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| topic | <code>string</code> | The topic to subscribe to. |
+| metadata | <code>Object</code> | Optional metadata associated with the subscription. |
+| num | <code>number</code> | Optional parameter for the number of subscribers to find. |
+| fee | <code>number</code> | Optional subscription fee. |
+| wallet | <code>Object</code> | Optional wallet to use for the subscription fee. |
+| height | <code>number</code> | Optional blockchain height at which the subscription should be valid. |
+
+<a name="PubSubDecorator+unsubscribe"></a>
+
+### pubSubDecorator.unsubscribe(topic) ⇒ <code>Promise.&lt;\*&gt;</code>
+Unsubscribes from a topic. Uses PubSubPersist for unsubscribing if the transport is NKN.
+
+**Kind**: instance method of [<code>PubSubDecorator</code>](#PubSubDecorator)  
+**Returns**: <code>Promise.&lt;\*&gt;</code> - - A promise that resolves when the unsubscription is complete.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| topic | <code>string</code> | The topic to unsubscribe from. |
+
+<a name="PubSubDecorator+discover"></a>
+
+### pubSubDecorator.discover(topic, opts) ⇒ <code>Promise.&lt;Array&gt;</code>
+Discovers subscribers for a topic using either the underlying transport or PubSubPersist for NKN.
+
+**Kind**: instance method of [<code>PubSubDecorator</code>](#PubSubDecorator)  
+**Returns**: <code>Promise.&lt;Array&gt;</code> - - A promise that resolves to an array of discovered subscribers.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| topic | <code>string</code> | The topic for which to discover subscribers. |
+| opts | <code>Object</code> | Optional options for discovery. |
+
 <a name="NknConnect"></a>
 
 ## NknConnect
-Highly persistent and fault-tolerant connection to the NKN network.
+This class abstracts and encapsulates the logic required for establishing
+and maintaining a persistent connection with the NKN network, dealing with
+message reception, connection readiness, and WebSocket errors.
 
 **Kind**: global class  
 
@@ -713,126 +799,6 @@ Static method to create and boot an Entry instance.
 | --- | --- | --- |
 | ...args | <code>any</code> | The arguments to pass to the constructor. |
 
-<a name="Seeder"></a>
-
-## Seeder
-Seeder class responsible for generating and testing NKN client seeds.
-
-**Kind**: global class  
-
-* [Seeder](#Seeder)
-    * [new Seeder(opts)](#new_Seeder_new)
-    * _instance_
-        * [.getSeeds([num], preimg)](#Seeder+getSeeds) ⇒ <code>Promise.&lt;Array.&lt;SeedInfo&gt;&gt;</code>
-        * [.createSeed(entropy)](#Seeder+createSeed) ⇒ <code>Promise.&lt;SeedInfo&gt;</code>
-        * [.testSeeds(seeds, [numClients])](#Seeder+testSeeds) ⇒ <code>Promise.&lt;Array&gt;</code>
-        * [.testClient(obj, [store], [numSubClients])](#Seeder+testClient) ⇒ <code>Promise.&lt;Array&gt;</code>
-    * _static_
-        * [.numClients](#Seeder.numClients) ⇒ <code>number</code>
-        * [.numSeeds](#Seeder.numSeeds) ⇒ <code>number</code>
-        * [.numWords](#Seeder.numWords) ⇒ <code>number</code>
-        * [.connectTimeout](#Seeder.connectTimeout) ⇒ <code>number</code>
-        * [.generate(preimg, numWords)](#Seeder.generate) ⇒ <code>Promise.&lt;Object&gt;</code>
-
-<a name="new_Seeder_new"></a>
-
-### new Seeder(opts)
-Constructs a new Seeder instance with options.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| opts | <code>Object</code> | Options for seed generation and testing. |
-
-<a name="Seeder+getSeeds"></a>
-
-### seeder.getSeeds([num], preimg) ⇒ <code>Promise.&lt;Array.&lt;SeedInfo&gt;&gt;</code>
-Generates a specified number of seeds.
-
-**Kind**: instance method of [<code>Seeder</code>](#Seeder)  
-**Returns**: <code>Promise.&lt;Array.&lt;SeedInfo&gt;&gt;</code> - - An array of seed information objects.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [num] | <code>number</code> | Number of seeds to generate. |
-| preimg | <code>Buffer</code> \| <code>string</code> | Pre-image for entropy generation. |
-
-<a name="Seeder+createSeed"></a>
-
-### seeder.createSeed(entropy) ⇒ <code>Promise.&lt;SeedInfo&gt;</code>
-Creates a seed object from given entropy.
-
-**Kind**: instance method of [<code>Seeder</code>](#Seeder)  
-**Returns**: <code>Promise.&lt;SeedInfo&gt;</code> - - The generated seed information.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| entropy | <code>Buffer</code> | The entropy to generate seed from. |
-
-<a name="Seeder+testSeeds"></a>
-
-### seeder.testSeeds(seeds, [numClients]) ⇒ <code>Promise.&lt;Array&gt;</code>
-Tests a list of seeds with NKN clients to determine their connectivity quality.
-
-**Kind**: instance method of [<code>Seeder</code>](#Seeder)  
-**Returns**: <code>Promise.&lt;Array&gt;</code> - - Sorted array of nodes with their test results.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| seeds | <code>Array.&lt;SeedInfo&gt;</code> | An array of seed information objects to test. |
-| [numClients] | <code>number</code> | Number of clients to test per seed. |
-
-<a name="Seeder+testClient"></a>
-
-### seeder.testClient(obj, [store], [numSubClients]) ⇒ <code>Promise.&lt;Array&gt;</code>
-Tests connectivity for a single NKN client based on seed information.
-
-**Kind**: instance method of [<code>Seeder</code>](#Seeder)  
-**Returns**: <code>Promise.&lt;Array&gt;</code> - - The result of the connectivity test for the client.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| obj | <code>SeedInfo</code> | The seed information for the client to test. |
-| [store] | <code>Object</code> | A storage object to accumulate test results. |
-| [numSubClients] | <code>number</code> | Number of subclients to use for testing. |
-
-<a name="Seeder.numClients"></a>
-
-### Seeder.numClients ⇒ <code>number</code>
-Gets the default number of clients to test per seed.
-
-**Kind**: static property of [<code>Seeder</code>](#Seeder)  
-<a name="Seeder.numSeeds"></a>
-
-### Seeder.numSeeds ⇒ <code>number</code>
-Gets the default number of seeds to generate.
-
-**Kind**: static property of [<code>Seeder</code>](#Seeder)  
-<a name="Seeder.numWords"></a>
-
-### Seeder.numWords ⇒ <code>number</code>
-Gets the default number of words for mnemonic seed phrases.
-
-**Kind**: static property of [<code>Seeder</code>](#Seeder)  
-<a name="Seeder.connectTimeout"></a>
-
-### Seeder.connectTimeout ⇒ <code>number</code>
-Gets the default timeout for connecting to NKN clients.
-
-**Kind**: static property of [<code>Seeder</code>](#Seeder)  
-<a name="Seeder.generate"></a>
-
-### Seeder.generate(preimg, numWords) ⇒ <code>Promise.&lt;Object&gt;</code>
-Generates seeds, tests them, and returns the best candidate along with related data.
-
-**Kind**: static method of [<code>Seeder</code>](#Seeder)  
-**Returns**: <code>Promise.&lt;Object&gt;</code> - - The best seed and associated data.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| preimg | <code>Buffer</code> \| <code>string</code> | Pre-image for entropy generation. |
-| numWords | <code>number</code> | The number of words for the mnemonic phrase. |
-
 <a name="PubSubPersist"></a>
 
 ## PubSubPersist
@@ -969,6 +935,126 @@ Discovers subscribers for a given topic, with a delay if necessary.
 | --- | --- | --- | --- |
 | topic | <code>string</code> |  | The topic to discover subscribers for. |
 | [opts] | <code>Object</code> | <code>{}</code> | Options for the discovery process. |
+
+<a name="Seeder"></a>
+
+## Seeder
+Seeder class responsible for generating and testing NKN client seeds.
+
+**Kind**: global class  
+
+* [Seeder](#Seeder)
+    * [new Seeder(opts)](#new_Seeder_new)
+    * _instance_
+        * [.getSeeds([num], preimg)](#Seeder+getSeeds) ⇒ <code>Promise.&lt;Array.&lt;SeedInfo&gt;&gt;</code>
+        * [.createSeed(entropy)](#Seeder+createSeed) ⇒ <code>Promise.&lt;SeedInfo&gt;</code>
+        * [.testSeeds(seeds, [numClients])](#Seeder+testSeeds) ⇒ <code>Promise.&lt;Array&gt;</code>
+        * [.testClient(obj, [store], [numSubClients])](#Seeder+testClient) ⇒ <code>Promise.&lt;Array&gt;</code>
+    * _static_
+        * [.numClients](#Seeder.numClients) ⇒ <code>number</code>
+        * [.numSeeds](#Seeder.numSeeds) ⇒ <code>number</code>
+        * [.numWords](#Seeder.numWords) ⇒ <code>number</code>
+        * [.connectTimeout](#Seeder.connectTimeout) ⇒ <code>number</code>
+        * [.generate(preimg, numWords)](#Seeder.generate) ⇒ <code>Promise.&lt;Object&gt;</code>
+
+<a name="new_Seeder_new"></a>
+
+### new Seeder(opts)
+Constructs a new Seeder instance with options.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| opts | <code>Object</code> | Options for seed generation and testing. |
+
+<a name="Seeder+getSeeds"></a>
+
+### seeder.getSeeds([num], preimg) ⇒ <code>Promise.&lt;Array.&lt;SeedInfo&gt;&gt;</code>
+Generates a specified number of seeds.
+
+**Kind**: instance method of [<code>Seeder</code>](#Seeder)  
+**Returns**: <code>Promise.&lt;Array.&lt;SeedInfo&gt;&gt;</code> - - An array of seed information objects.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [num] | <code>number</code> | Number of seeds to generate. |
+| preimg | <code>Buffer</code> \| <code>string</code> | Pre-image for entropy generation. |
+
+<a name="Seeder+createSeed"></a>
+
+### seeder.createSeed(entropy) ⇒ <code>Promise.&lt;SeedInfo&gt;</code>
+Creates a seed object from given entropy.
+
+**Kind**: instance method of [<code>Seeder</code>](#Seeder)  
+**Returns**: <code>Promise.&lt;SeedInfo&gt;</code> - - The generated seed information.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| entropy | <code>Buffer</code> | The entropy to generate seed from. |
+
+<a name="Seeder+testSeeds"></a>
+
+### seeder.testSeeds(seeds, [numClients]) ⇒ <code>Promise.&lt;Array&gt;</code>
+Tests a list of seeds with NKN clients to determine their connectivity quality.
+
+**Kind**: instance method of [<code>Seeder</code>](#Seeder)  
+**Returns**: <code>Promise.&lt;Array&gt;</code> - - Sorted array of nodes with their test results.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| seeds | <code>Array.&lt;SeedInfo&gt;</code> | An array of seed information objects to test. |
+| [numClients] | <code>number</code> | Number of clients to test per seed. |
+
+<a name="Seeder+testClient"></a>
+
+### seeder.testClient(obj, [store], [numSubClients]) ⇒ <code>Promise.&lt;Array&gt;</code>
+Tests connectivity for a single NKN client based on seed information.
+
+**Kind**: instance method of [<code>Seeder</code>](#Seeder)  
+**Returns**: <code>Promise.&lt;Array&gt;</code> - - The result of the connectivity test for the client.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| obj | <code>SeedInfo</code> | The seed information for the client to test. |
+| [store] | <code>Object</code> | A storage object to accumulate test results. |
+| [numSubClients] | <code>number</code> | Number of subclients to use for testing. |
+
+<a name="Seeder.numClients"></a>
+
+### Seeder.numClients ⇒ <code>number</code>
+Gets the default number of clients to test per seed.
+
+**Kind**: static property of [<code>Seeder</code>](#Seeder)  
+<a name="Seeder.numSeeds"></a>
+
+### Seeder.numSeeds ⇒ <code>number</code>
+Gets the default number of seeds to generate.
+
+**Kind**: static property of [<code>Seeder</code>](#Seeder)  
+<a name="Seeder.numWords"></a>
+
+### Seeder.numWords ⇒ <code>number</code>
+Gets the default number of words for mnemonic seed phrases.
+
+**Kind**: static property of [<code>Seeder</code>](#Seeder)  
+<a name="Seeder.connectTimeout"></a>
+
+### Seeder.connectTimeout ⇒ <code>number</code>
+Gets the default timeout for connecting to NKN clients.
+
+**Kind**: static property of [<code>Seeder</code>](#Seeder)  
+<a name="Seeder.generate"></a>
+
+### Seeder.generate(preimg, numWords) ⇒ <code>Promise.&lt;Object&gt;</code>
+Generates seeds, tests them, and returns the best candidate along with related data.
+
+**Kind**: static method of [<code>Seeder</code>](#Seeder)  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - - The best seed and associated data.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| preimg | <code>Buffer</code> \| <code>string</code> | Pre-image for entropy generation. |
+| numWords | <code>number</code> | The number of words for the mnemonic phrase. |
 
 <a name="Newk"></a>
 
