@@ -15,6 +15,16 @@ This class is abstract and cannot be instantiated directly.</p>
 </dd>
 <dt><a href="#NknConnect">NknConnect</a></dt>
 <dd></dd>
+<dt><a href="#Entry">Entry</a></dt>
+<dd><p>Class representing an Entry for managing NKN node latency tests.</p>
+</dd>
+<dt><a href="#Seeder">Seeder</a></dt>
+<dd><p>Seeder class responsible for generating and testing NKN client seeds.</p>
+</dd>
+<dt><a href="#PubSubPersist">PubSubPersist</a></dt>
+<dd><p>Represents a persistent Pub/Sub manager with extended functionality.
+Inherits from the Evented class to allow for event-driven architecture.</p>
+</dd>
 <dt><a href="#Newk">Newk</a></dt>
 <dd><p>Main class for creating a network communication instance with various transport and decorator options.</p>
 </dd>
@@ -536,6 +546,426 @@ Initializes a new NKN client and returns it.
 | Param | Type | Description |
 | --- | --- | --- |
 | ...args | <code>any</code> | Arguments to pass to the constructor. |
+
+<a name="Entry"></a>
+
+## Entry
+Class representing an Entry for managing NKN node latency tests.
+
+**Kind**: global class  
+
+* [Entry](#Entry)
+    * [new Entry([opts])](#new_Entry_new)
+    * _instance_
+        * [.boot()](#Entry+boot) ⇒ <code>Promise.&lt;void&gt;</code>
+        * [.shouldTest()](#Entry+shouldTest) ⇒ <code>boolean</code>
+        * [.createItem(addr)](#Entry+createItem) ⇒ <code>Object</code>
+        * [.setItem(item)](#Entry+setItem) ⇒ <code>Object</code>
+        * [.sort(arr)](#Entry+sort) ⇒ <code>Array.&lt;Object&gt;</code>
+        * [.clean(store)](#Entry+clean) ⇒ <code>Array.&lt;Object&gt;</code>
+        * [.getStore()](#Entry+getStore) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
+        * [.testLatency()](#Entry+testLatency) ⇒ <code>Promise.&lt;void&gt;</code>
+        * [.getLatency(addr)](#Entry+getLatency) ⇒ <code>Promise.&lt;(number\|null)&gt;</code>
+        * [.add(addrs)](#Entry+add) ⇒ <code>Promise.&lt;void&gt;</code>
+    * _static_
+        * [.official](#Entry.official) ⇒ <code>string</code>
+        * [.protocol([addr])](#Entry.protocol) ⇒ <code>string</code>
+        * [.boot(...args)](#Entry.boot) ⇒ [<code>Promise.&lt;Entry&gt;</code>](#Entry)
+
+<a name="new_Entry_new"></a>
+
+### new Entry([opts])
+Entry constructor that initializes the entry with default options and database.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [opts] | <code>Object</code> | The options to use for the entry. |
+
+<a name="Entry+boot"></a>
+
+### entry.boot() ⇒ <code>Promise.&lt;void&gt;</code>
+Initializes the entry by loading stored test data and testing latency if necessary.
+
+**Kind**: instance method of [<code>Entry</code>](#Entry)  
+<a name="Entry+shouldTest"></a>
+
+### entry.shouldTest() ⇒ <code>boolean</code>
+Determines whether a latency test should be performed based on current data and time interval.
+
+**Kind**: instance method of [<code>Entry</code>](#Entry)  
+**Returns**: <code>boolean</code> - A flag indicating whether a test should be conducted.  
+<a name="Entry+createItem"></a>
+
+### entry.createItem(addr) ⇒ <code>Object</code>
+Creates an object representing an item for latency testing.
+
+**Kind**: instance method of [<code>Entry</code>](#Entry)  
+**Returns**: <code>Object</code> - The item object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| addr | <code>string</code> | The address of the item to test. |
+
+<a name="Entry+setItem"></a>
+
+### entry.setItem(item) ⇒ <code>Object</code>
+Sets and updates the properties of a test item with new results.
+
+**Kind**: instance method of [<code>Entry</code>](#Entry)  
+**Returns**: <code>Object</code> - The updated item object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| item | <code>Object</code> | The item to update. |
+
+<a name="Entry+sort"></a>
+
+### entry.sort(arr) ⇒ <code>Array.&lt;Object&gt;</code>
+Sorts an array of test items based on their average latency, bad count, and ratio.
+
+**Kind**: instance method of [<code>Entry</code>](#Entry)  
+**Returns**: <code>Array.&lt;Object&gt;</code> - The sorted array of items.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| arr | <code>Array.&lt;Object&gt;</code> | The array of items to sort. |
+
+<a name="Entry+clean"></a>
+
+### entry.clean(store) ⇒ <code>Array.&lt;Object&gt;</code>
+Cleans a store of items by limiting the number of results stored for each.
+
+**Kind**: instance method of [<code>Entry</code>](#Entry)  
+**Returns**: <code>Array.&lt;Object&gt;</code> - The cleaned store of items.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| store | <code>Array.&lt;Object&gt;</code> | The store of items to clean. |
+
+<a name="Entry+getStore"></a>
+
+### entry.getStore() ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
+Retrieves the current store of latency test items, including seed addresses.
+
+**Kind**: instance method of [<code>Entry</code>](#Entry)  
+**Returns**: <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code> - A promise that resolves to the store of items.  
+<a name="Entry+testLatency"></a>
+
+### entry.testLatency() ⇒ <code>Promise.&lt;void&gt;</code>
+Tests the latency for each item in the store and updates the store accordingly.
+
+**Kind**: instance method of [<code>Entry</code>](#Entry)  
+<a name="Entry+getLatency"></a>
+
+### entry.getLatency(addr) ⇒ <code>Promise.&lt;(number\|null)&gt;</code>
+Gets the latency for a given address by making an RPC call and timing the response.
+
+**Kind**: instance method of [<code>Entry</code>](#Entry)  
+**Returns**: <code>Promise.&lt;(number\|null)&gt;</code> - The latency in milliseconds or null if the request failed or timed out.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| addr | <code>string</code> | The address to test. |
+
+<a name="Entry+add"></a>
+
+### entry.add(addrs) ⇒ <code>Promise.&lt;void&gt;</code>
+Adds new addresses to the seeds list and updates the store, performing latency tests if necessary.
+
+**Kind**: instance method of [<code>Entry</code>](#Entry)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| addrs | <code>string</code> \| <code>Array.&lt;string&gt;</code> | The address or array of addresses to add. |
+
+<a name="Entry.official"></a>
+
+### Entry.official ⇒ <code>string</code>
+Retrieves the official NKN node address.
+
+**Kind**: static property of [<code>Entry</code>](#Entry)  
+**Returns**: <code>string</code> - The official NKN node address.  
+<a name="Entry.protocol"></a>
+
+### Entry.protocol([addr]) ⇒ <code>string</code>
+Determines the protocol (http or https) to use based on the environment and address.
+
+**Kind**: static method of [<code>Entry</code>](#Entry)  
+**Returns**: <code>string</code> - The determined protocol.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [addr] | <code>string</code> | The address to determine the protocol for. |
+
+<a name="Entry.boot"></a>
+
+### Entry.boot(...args) ⇒ [<code>Promise.&lt;Entry&gt;</code>](#Entry)
+Static method to create and boot an Entry instance.
+
+**Kind**: static method of [<code>Entry</code>](#Entry)  
+**Returns**: [<code>Promise.&lt;Entry&gt;</code>](#Entry) - The booted Entry instance.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ...args | <code>any</code> | The arguments to pass to the constructor. |
+
+<a name="Seeder"></a>
+
+## Seeder
+Seeder class responsible for generating and testing NKN client seeds.
+
+**Kind**: global class  
+
+* [Seeder](#Seeder)
+    * [new Seeder(opts)](#new_Seeder_new)
+    * _instance_
+        * [.getSeeds([num], preimg)](#Seeder+getSeeds) ⇒ <code>Promise.&lt;Array.&lt;SeedInfo&gt;&gt;</code>
+        * [.createSeed(entropy)](#Seeder+createSeed) ⇒ <code>Promise.&lt;SeedInfo&gt;</code>
+        * [.testSeeds(seeds, [numClients])](#Seeder+testSeeds) ⇒ <code>Promise.&lt;Array&gt;</code>
+        * [.testClient(obj, [store], [numSubClients])](#Seeder+testClient) ⇒ <code>Promise.&lt;Array&gt;</code>
+    * _static_
+        * [.numClients](#Seeder.numClients) ⇒ <code>number</code>
+        * [.numSeeds](#Seeder.numSeeds) ⇒ <code>number</code>
+        * [.numWords](#Seeder.numWords) ⇒ <code>number</code>
+        * [.connectTimeout](#Seeder.connectTimeout) ⇒ <code>number</code>
+        * [.generate(preimg, numWords)](#Seeder.generate) ⇒ <code>Promise.&lt;Object&gt;</code>
+
+<a name="new_Seeder_new"></a>
+
+### new Seeder(opts)
+Constructs a new Seeder instance with options.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| opts | <code>Object</code> | Options for seed generation and testing. |
+
+<a name="Seeder+getSeeds"></a>
+
+### seeder.getSeeds([num], preimg) ⇒ <code>Promise.&lt;Array.&lt;SeedInfo&gt;&gt;</code>
+Generates a specified number of seeds.
+
+**Kind**: instance method of [<code>Seeder</code>](#Seeder)  
+**Returns**: <code>Promise.&lt;Array.&lt;SeedInfo&gt;&gt;</code> - - An array of seed information objects.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [num] | <code>number</code> | Number of seeds to generate. |
+| preimg | <code>Buffer</code> \| <code>string</code> | Pre-image for entropy generation. |
+
+<a name="Seeder+createSeed"></a>
+
+### seeder.createSeed(entropy) ⇒ <code>Promise.&lt;SeedInfo&gt;</code>
+Creates a seed object from given entropy.
+
+**Kind**: instance method of [<code>Seeder</code>](#Seeder)  
+**Returns**: <code>Promise.&lt;SeedInfo&gt;</code> - - The generated seed information.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| entropy | <code>Buffer</code> | The entropy to generate seed from. |
+
+<a name="Seeder+testSeeds"></a>
+
+### seeder.testSeeds(seeds, [numClients]) ⇒ <code>Promise.&lt;Array&gt;</code>
+Tests a list of seeds with NKN clients to determine their connectivity quality.
+
+**Kind**: instance method of [<code>Seeder</code>](#Seeder)  
+**Returns**: <code>Promise.&lt;Array&gt;</code> - - Sorted array of nodes with their test results.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| seeds | <code>Array.&lt;SeedInfo&gt;</code> | An array of seed information objects to test. |
+| [numClients] | <code>number</code> | Number of clients to test per seed. |
+
+<a name="Seeder+testClient"></a>
+
+### seeder.testClient(obj, [store], [numSubClients]) ⇒ <code>Promise.&lt;Array&gt;</code>
+Tests connectivity for a single NKN client based on seed information.
+
+**Kind**: instance method of [<code>Seeder</code>](#Seeder)  
+**Returns**: <code>Promise.&lt;Array&gt;</code> - - The result of the connectivity test for the client.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| obj | <code>SeedInfo</code> | The seed information for the client to test. |
+| [store] | <code>Object</code> | A storage object to accumulate test results. |
+| [numSubClients] | <code>number</code> | Number of subclients to use for testing. |
+
+<a name="Seeder.numClients"></a>
+
+### Seeder.numClients ⇒ <code>number</code>
+Gets the default number of clients to test per seed.
+
+**Kind**: static property of [<code>Seeder</code>](#Seeder)  
+<a name="Seeder.numSeeds"></a>
+
+### Seeder.numSeeds ⇒ <code>number</code>
+Gets the default number of seeds to generate.
+
+**Kind**: static property of [<code>Seeder</code>](#Seeder)  
+<a name="Seeder.numWords"></a>
+
+### Seeder.numWords ⇒ <code>number</code>
+Gets the default number of words for mnemonic seed phrases.
+
+**Kind**: static property of [<code>Seeder</code>](#Seeder)  
+<a name="Seeder.connectTimeout"></a>
+
+### Seeder.connectTimeout ⇒ <code>number</code>
+Gets the default timeout for connecting to NKN clients.
+
+**Kind**: static property of [<code>Seeder</code>](#Seeder)  
+<a name="Seeder.generate"></a>
+
+### Seeder.generate(preimg, numWords) ⇒ <code>Promise.&lt;Object&gt;</code>
+Generates seeds, tests them, and returns the best candidate along with related data.
+
+**Kind**: static method of [<code>Seeder</code>](#Seeder)  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - - The best seed and associated data.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| preimg | <code>Buffer</code> \| <code>string</code> | Pre-image for entropy generation. |
+| numWords | <code>number</code> | The number of words for the mnemonic phrase. |
+
+<a name="PubSubPersist"></a>
+
+## PubSubPersist
+Represents a persistent Pub/Sub manager with extended functionality.
+Inherits from the Evented class to allow for event-driven architecture.
+
+**Kind**: global class  
+
+* [PubSubPersist](#PubSubPersist)
+    * [new PubSubPersist(rpc, [opts])](#new_PubSubPersist_new)
+    * [.start()](#PubSubPersist+start) ⇒ <code>Promise.&lt;void&gt;</code>
+    * [.startHeart()](#PubSubPersist+startHeart)
+    * [.hasTopics()](#PubSubPersist+hasTopics) ⇒ <code>boolean</code>
+    * [.heartbeat()](#PubSubPersist+heartbeat) ⇒ <code>Promise.&lt;void&gt;</code>
+    * [.getBlockHeight()](#PubSubPersist+getBlockHeight) ⇒ <code>Promise.&lt;(number\|boolean)&gt;</code>
+    * [.subscribe(topic, [metadata], [num], [fee], [wallet], [height])](#PubSubPersist+subscribe) ⇒ <code>Promise.&lt;void&gt;</code>
+    * [.getSubscriptionExpiry(topic, [addr])](#PubSubPersist+getSubscriptionExpiry) ⇒ <code>Promise.&lt;number&gt;</code>
+    * [.getSubscription(topic, [addr])](#PubSubPersist+getSubscription) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.getSubscribers(...args)](#PubSubPersist+getSubscribers) ⇒ <code>Promise.&lt;Array&gt;</code>
+    * [.unsubscribe(topic)](#PubSubPersist+unsubscribe) ⇒ <code>Promise.&lt;void&gt;</code>
+    * [.discover(topic, [opts])](#PubSubPersist+discover) ⇒ <code>Promise.&lt;Array&gt;</code>
+
+<a name="new_PubSubPersist_new"></a>
+
+### new PubSubPersist(rpc, [opts])
+Creates an instance of PubSubPersist.
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| rpc | <code>Object</code> |  | An object that provides RPC functionalities. |
+| [opts] | <code>Object</code> | <code>{}</code> | Options for the PubSubPersist. |
+
+<a name="PubSubPersist+start"></a>
+
+### pubSubPersist.start() ⇒ <code>Promise.&lt;void&gt;</code>
+Starts the Pub/Sub system and subscribes to the provided topics.
+
+**Kind**: instance method of [<code>PubSubPersist</code>](#PubSubPersist)  
+<a name="PubSubPersist+startHeart"></a>
+
+### pubSubPersist.startHeart()
+Initiates the heartbeat mechanism for keeping the subscriptions alive.
+
+**Kind**: instance method of [<code>PubSubPersist</code>](#PubSubPersist)  
+<a name="PubSubPersist+hasTopics"></a>
+
+### pubSubPersist.hasTopics() ⇒ <code>boolean</code>
+Checks if there are any active topics.
+
+**Kind**: instance method of [<code>PubSubPersist</code>](#PubSubPersist)  
+<a name="PubSubPersist+heartbeat"></a>
+
+### pubSubPersist.heartbeat() ⇒ <code>Promise.&lt;void&gt;</code>
+Performs a heartbeat action to renew subscriptions and manage topic list.
+
+**Kind**: instance method of [<code>PubSubPersist</code>](#PubSubPersist)  
+<a name="PubSubPersist+getBlockHeight"></a>
+
+### pubSubPersist.getBlockHeight() ⇒ <code>Promise.&lt;(number\|boolean)&gt;</code>
+Retrieves the current block height from the blockchain.
+
+**Kind**: instance method of [<code>PubSubPersist</code>](#PubSubPersist)  
+<a name="PubSubPersist+subscribe"></a>
+
+### pubSubPersist.subscribe(topic, [metadata], [num], [fee], [wallet], [height]) ⇒ <code>Promise.&lt;void&gt;</code>
+Subscribes to a topic with optional metadata, block count, and fee.
+
+**Kind**: instance method of [<code>PubSubPersist</code>](#PubSubPersist)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| topic | <code>string</code> |  | The topic to subscribe to. |
+| [metadata] | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | Metadata related to the subscription. |
+| [num] | <code>number</code> |  | The number of blocks the subscription should be valid. |
+| [fee] | <code>number</code> |  | The subscription fee. |
+| [wallet] | <code>Object</code> |  | The wallet object to perform transactions. |
+| [height] | <code>number</code> |  | The current block height, if already known. |
+
+<a name="PubSubPersist+getSubscriptionExpiry"></a>
+
+### pubSubPersist.getSubscriptionExpiry(topic, [addr]) ⇒ <code>Promise.&lt;number&gt;</code>
+Determines the number of blocks until a subscription expires.
+
+**Kind**: instance method of [<code>PubSubPersist</code>](#PubSubPersist)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| topic | <code>string</code> | The topic of the subscription. |
+| [addr] | <code>string</code> | The address to check the subscription for. Defaults to own address. |
+
+<a name="PubSubPersist+getSubscription"></a>
+
+### pubSubPersist.getSubscription(topic, [addr]) ⇒ <code>Promise.&lt;Object&gt;</code>
+Gets the details of a subscription for a topic.
+
+**Kind**: instance method of [<code>PubSubPersist</code>](#PubSubPersist)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| topic | <code>string</code> | The topic to get the subscription for. |
+| [addr] | <code>string</code> | The address of the subscriber. |
+
+<a name="PubSubPersist+getSubscribers"></a>
+
+### pubSubPersist.getSubscribers(...args) ⇒ <code>Promise.&lt;Array&gt;</code>
+Retrieves a list of subscribers for a given topic.
+
+**Kind**: instance method of [<code>PubSubPersist</code>](#PubSubPersist)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ...args | <code>any</code> | Arguments to be passed for subscriber retrieval. |
+
+<a name="PubSubPersist+unsubscribe"></a>
+
+### pubSubPersist.unsubscribe(topic) ⇒ <code>Promise.&lt;void&gt;</code>
+Marks a topic for unsubscription during the next heartbeat cycle.
+
+**Kind**: instance method of [<code>PubSubPersist</code>](#PubSubPersist)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| topic | <code>string</code> | The topic to unsubscribe from. |
+
+<a name="PubSubPersist+discover"></a>
+
+### pubSubPersist.discover(topic, [opts]) ⇒ <code>Promise.&lt;Array&gt;</code>
+Discovers subscribers for a given topic, with a delay if necessary.
+
+**Kind**: instance method of [<code>PubSubPersist</code>](#PubSubPersist)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| topic | <code>string</code> |  | The topic to discover subscribers for. |
+| [opts] | <code>Object</code> | <code>{}</code> | Options for the discovery process. |
 
 <a name="Newk"></a>
 
