@@ -13,8 +13,21 @@
   },
   "homepage": "https://gitlab.com/frenware/utils/newk#readme",
   "main": "lib/newk.js",
+  "exports": {
+    ".": "./lib/newk.js",
+    "./connect": "./lib/modules/nkn-connect.js",
+    "./entry": "./lib/modules/nkn-entry.js",
+    "./pubsub": "./lib/modules/nkn-pubsub.js",
+    "./seeder": "./lib/modules/nkn-seeder.js",
+    "./*/": "./lib/*/",
+    "./*": "./lib/*.js"
+  },
   "browser": {
-    ".": "./lib/newk.js"
+    ".": "./lib/newk.js",
+    "connect": "./lib/modules/nkn-connect.js",
+    "entry": "./lib/modules/nkn-entry.js",
+    "pubsub": "./lib/modules/nkn-pubsub.js",
+    "seeder": "./lib/modules/nkn-seeder.js"
   },
   "scripts": {
     "dev:test": "nodemon -w ../.. -x npm test",
