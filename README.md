@@ -109,12 +109,6 @@ You can use `onMessage`, `onConnect`, and `onWsError` methods to handle differen
 
 - [API Reference](/docs/api.md)
 
-### API
-
-- `BaseTransport`: Abstract base class for all transports.
-- `NknTransport`: NKN transport implementation.
-- `Newk`: Main class to interact with the transport layer.
-
 ## Tests
 
 In order to run the test suite, simply clone the repository and install its dependencies:
