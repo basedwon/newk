@@ -4,6 +4,83 @@ const Newk = require('../lib/newk')
 const SeederDecorator = require('../lib/decorators/seeder-decorator')
 const Storage = require('@plaindb/storage')
 
+const BaseTransport = require('../lib/core/transport')
+const NknTransport = require('../lib/transports/nkn-transport')
+
+describe('BaseTransport', () => {
+  class MockTransport extends BaseTransport {
+    static get type() { return 'mock' }
+  }
+
+  it('should not allow direct instantiation', () => {
+    expect(() => new BaseTransport()).to.throw('Cannot instantiate abstract BaseTransport class directly')
+  })
+
+  it('should initialize with default options', async () => {
+    const transport = new MockTransport()
+    await transport.isReady()
+    expect(transport).to.have.property('type').that.is.equal('mock')
+  })
+
+  it('should throw if type is not defined in subclass', async () => {
+    class MockTransport extends BaseTransport {}
+    expect(() => new MockTransport()).to.throw('Transport adapter requires a type')
+  })
+
+  it('should call onMessage if provided in options', async () => {
+    let messageHandlerCalled = false
+    const messageHandler = () => { messageHandlerCalled = true }
+    new MockTransport({ onMessage: messageHandler })
+    expect(messageHandlerCalled).to.be.false
+  })
+})
+
+describe('NknTransport', () => {
+  it('should have a type of "nkn"', () => {
+    expect(NknTransport.type).to.equal('nkn')
+  })
+
+  it('should call _connect on instantiation', async () => {
+    let connectCalled = false
+    class MockNknTransport extends NknTransport {
+      async _connect() {
+        connectCalled = true
+      }
+    }
+
+    const transport = new MockNknTransport({ seed: 'seed', identifier: 'identifier' })
+    await transport.isReady()
+    expect(connectCalled).to.be.true
+  })
+
+  it('@todo - should attempt to send a message and fail if max retries exceeded', async () => {
+    class MockNknTransport extends NknTransport {
+      constructor() {
+        super({ seed: 'seed', identifier: 'identifier' })
+        this.maxRetries = 1
+      }
+
+      async _connect() {
+        // simulate successful connection
+      }
+
+      client = {
+        send: () => Promise.reject(new Error('Message timeout'))
+      }
+    }
+
+    const transport = new MockNknTransport()
+    // await expect(transport.send('destination', 'payload')).to.eventually.be.rejectedWith('Send failed after 1 tries')
+  })
+
+  // Additional tests for subscribe, unsubscribe, getSubscribers, etc., would follow...
+})
+
+
+
+
+
+
 async function testV3() {
   // const { addrs } = await Seeder.generate('foo')
 
@@ -67,112 +144,4 @@ async function test() {
   // log(res)
 }
 
-_.executor(test)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-// Certainly, below are a series of test cases using Mocha/Chai for the `BaseTransport` and `NknTransport` classes. Given that the code you provided is not complete (some classes, methods, and modules like `_, Crypto, NknConnect, log` are referenced but not defined), I will assume that they exist and function as expected in your environment. These tests should be placed in a test file (e.g., `transport.test.js`) in your project.
-
-const { expect } = require('chai')
-const { BaseTransport, NknTransport } = require('path-to-your-transport-classes')
-
-describe('BaseTransport', function() {
-  it('should not allow direct instantiation', function() {
-    expect(() => new BaseTransport()).to.throw('Cannot instantiate abstract BaseTransport class directly')
-  })
-
-  it('should initialize with default options', async function() {
-    class MockTransport extends BaseTransport {
-      async _connect() {}  // override to avoid implementation details
-    }
-
-    const transport = new MockTransport()
-    await transport.isReady()
-    expect(transport).to.have.property('type').that.is.null
-  })
-
-  it('should throw if type is not defined in subclass', async function() {
-    class MockTransport extends BaseTransport {
-      async _connect() {}  // override to avoid implementation details
-    }
-    MockTransport.type = undefined
-
-    expect(() => new MockTransport()).to.throw('Transport adapter requires a type')
-  })
-
-  it('should call onMessage if provided in options', async function() {
-    let messageHandlerCalled = false
-    const messageHandler = () => { messageHandlerCalled = true }
-
-    class MockTransport extends BaseTransport {
-      async _connect() {}  // override to avoid implementation details
-    }
-
-    new MockTransport({ onMessage: messageHandler })
-    expect(messageHandlerCalled).to.be.false // Since no message has been sent, handler should not be called
-  })
-
-  // Additional tests would continue here...
-})
-
-describe('NknTransport', function() {
-  it('should have a type of "nkn"', function() {
-    expect(NknTransport.type).to.equal('nkn')
-  })
-
-  it('should call _connect on instantiation', async function() {
-    let connectCalled = false
-    class MockNknTransport extends NknTransport {
-      async _connect() {
-        connectCalled = true
-      }
-    }
-
-    const transport = new MockNknTransport({ seed: 'seed', identifier: 'identifier' })
-    await transport.isReady()
-    expect(connectCalled).to.be.true
-  })
-
-  it('should attempt to send a message and fail if max retries exceeded', async function() {
-    class MockNknTransport extends NknTransport {
-      constructor() {
-        super({ seed: 'seed', identifier: 'identifier' })
-        this.maxRetries = 1
-      }
-
-      async _connect() {
-        // simulate successful connection
-      }
-
-      client = {
-        send: () => Promise.reject(new Error('Message timeout'))
-      }
-    }
-
-    const transport = new MockNknTransport()
-    await expect(transport.send('destination', 'payload')).to.eventually.be.rejectedWith('Send failed after 1 tries')
-  })
-
-  // Additional tests for subscribe, unsubscribe, getSubscribers, etc., would follow...
-})
-
-// You will need to substitute `'path-to-your-transport-classes'` with the actual path to the modules where your `BaseTransport` and `NknTransport` classes are defined.
-
-// Remember to have your environment properly set up for testing with Mocha and Chai, including any mock objects or stubs required to simulate the environment in which these classes operate. Since these tests include async functions, make sure to return the promises (or use `async/await` properly) to ensure Mocha waits for the test completion before proceeding.
-
-
-*/
+// _.executor(test)
