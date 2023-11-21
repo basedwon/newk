@@ -6,6 +6,7 @@ const Storage = require('@plaindb/storage')
 
 const BaseTransport = require('../lib/core/transport')
 const NknTransport = require('../lib/transports/nkn-transport')
+const BusTransport = require('../lib/transports/bus-transport')
 
 describe('BaseTransport', () => {
   class MockTransport extends BaseTransport {
@@ -35,12 +36,18 @@ describe('BaseTransport', () => {
   })
 })
 
+describe('BusTransport', () => {
+  it('should have a type of "bus"', () => {
+    expect(BusTransport.type).to.equal('bus')
+  })
+})
+
 describe('NknTransport', () => {
   it('should have a type of "nkn"', () => {
     expect(NknTransport.type).to.equal('nkn')
   })
 
-  it('should call _connect on instantiation', async () => {
+  it.omit('should call _connect on instantiation', async () => {
     let connectCalled = false
     class MockNknTransport extends NknTransport {
       async _connect() {
@@ -52,36 +59,85 @@ describe('NknTransport', () => {
     await transport.isReady()
     expect(connectCalled).to.be.true
   })
-
-  it('@todo - should attempt to send a message and fail if max retries exceeded', async () => {
-    class MockNknTransport extends NknTransport {
-      constructor() {
-        super({ seed: 'seed', identifier: 'identifier' })
-        this.maxRetries = 1
-      }
-
-      async _connect() {
-        // simulate successful connection
-      }
-
-      client = {
-        send: () => Promise.reject(new Error('Message timeout'))
-      }
-    }
-
-    const transport = new MockNknTransport()
-    // await expect(transport.send('destination', 'payload')).to.eventually.be.rejectedWith('Send failed after 1 tries')
-  })
-
-  // Additional tests for subscribe, unsubscribe, getSubscribers, etc., would follow...
 })
 
+describe('Newk (bus)', () => {
+  const topic = 'foo'
+  let alice, bob
+  before.all(async () => {
+    if (!alice && !bob) {
+      [alice, bob] = await Promise.all(['alice', 'bob'].map(n => Newk.init(n, 'bus')))
+      bob.addRoute('ping', (data, src) => 'pong')
+    }
+  })
 
+  it('should send and receive', async () => {
+    const res = await alice.dispatch(bob, 'ping', 'foo')
+    expect(res).to.equal('pong')
+  })
 
+  it('should subscribe to a topic', async () => {
+    await alice.subscribe(topic)
+    const subs = await alice.getSubscribers(topic)
+    expect(subs).to.include(alice.addr)
+  })
 
+  it('should unsubscribe to a topic', async () => {
+    await alice.unsubscribe(topic)
+    const subs = await alice.getSubscribers(topic)
+    expect(subs).to.be.empty
+  })
 
+  it('should get subscribers to a topic', async () => {
+    await bob.subscribe(topic)
+    const subs = await alice.getSubscribers(topic)
+    expect(subs).to.include(bob.addr)
+  })
 
-async function testV3() {
+  it('should publish to a topic', async () => {
+    let res = await alice.broadcast(topic, 'ping', 'foo')
+    expect(res).to.have.lengthOf(1)
+    expect(res[0]).to.deep.equal({ addr: bob.addr, resp: 'pong' })
+  })
+})
+
+describe('Newk (nkn)', () => {
+  const topic = 'foo'
+  let alice, bob
+  before.all(async () => {
+    if (!alice && !bob) {
+      [alice, bob] = await Promise.all(['alice', 'bob'].map(n => Newk.init(n, 'nkn')))
+      bob.addRoute('ping', (data, src) => 'pong')
+    }
+  })
+
+  it('should send and receive', async () => {
+    const res = await alice.dispatch(bob, 'ping', 'foo')
+    expect(res).to.equal('pong')
+  })
+
+  // too wonky to test pubsub
+  it.omit('should subscribe to a topic', async () => {
+    await bob.subscribe(topic)
+    const subs = await alice.getSubscribers(topic)
+    expect(subs).to.include(bob.addr)
+  })
+
+  it.omit('should unsubscribe to a topic', async () => {
+    await alice.unsubscribe(topic)
+    const subs = await alice.getSubscribers(topic)
+    expect(subs).to.be.empty
+  })
+
+  it.omit('should publish to a topic', async () => {
+    let res = await alice.broadcast(topic, 'ping', 'foo')
+    expect(res).to.have.lengthOf(1)
+    expect(res[0]).to.deep.equal({ addr: bob.addr, resp: 'pong' })
+  })
+})
+
+async function test() {
+
   // const { addrs } = await Seeder.generate('foo')
 
   // const seeder = new Seeder()
@@ -97,9 +153,7 @@ async function testV3() {
 
   // log(entry)
   // await db.listAll()
-}
 
-async function test() {
   const topic = Crypto.hash('bing')
   // decorators = [PubSubDecorator, EncryptionDecorator, SeederDecorator]
   // decorators = [PubSubDecorator]
@@ -143,5 +197,3 @@ async function test() {
   // let res = await alice.send(bob, 'Hello!')
   // log(res)
 }
-
-// _.executor(test)

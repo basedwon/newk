@@ -14,7 +14,7 @@
 [![Twitter](https://img.shields.io/badge/@basdwon%20-%20?logo=twitter&color=%23383a40)](https://twitter.com/basdwon)
 [![Discord](https://img.shields.io/badge/Basedwon%20-%20?logo=discord&color=%23383a40)](https://discordapp.com/users/basedwon)
 
-A JS library that provides a flexible, transport-layer abstraction for various network protocols. By utilizing a base transport class, `newk` allows for easy extension and customization of network communication patterns. It comes with an NKN (New Kind of Network) transport implementation and supports message routing, publish/subscribe patterns, and basic message handling.
+Provides a flexible, transport-layer abstraction for various network protocols. By utilizing a base transport class, `newk` allows for easy extension and customization of network communication patterns. It comes with an NKN (New Kind of Network) and memory bus transport implementation and supports message routing, publish/subscribe patterns, and basic message handling.
 
 ## Features
 
@@ -44,7 +44,7 @@ const Newk = require('newk')
 
 ### Initializing Newk
 
-```javascript
+```js
 // Initialize with options
 const options = {
   identifier: 'your-identifier',
@@ -57,21 +57,21 @@ const newk = await Newk.init(options, transportType)
 
 ### Adding Routes
 
-```javascript
+```js
 newk.addRoute('action', handlerFunction)
 newk.addRoutes(anObjectContainingMethods) // each method that starts with `on` is route
 ```
 
 ### Sending and Dispatching Messages
 
-```javascript
+```js
 await newk.send(destination, payload, options)
 await newk.dispatch(destination, messageType, data, options)
 ```
 
 ### Subscription and Publishing
 
-```javascript
+```js
 await newk.subscribe(topic, metadata)
 await newk.unsubscribe(topic)
 await newk.publish(topic, payload)
@@ -80,7 +80,7 @@ await newk.broadcast(topic, messageType, data, options, excludeSelf)
 
 ### Getting Subscribers
 
-```javascript
+```js
 await newk.getSubscribers(topic, metadata)
 await newk.discover(topic, metadata, ...)
 ```
@@ -89,7 +89,7 @@ await newk.discover(topic, metadata, ...)
 
 The `onMessage` method is used to handle incoming messages:
 
-```javascript
+```js
 newk.onMessage((message) => {
   // Handle the message
 })
@@ -99,7 +99,7 @@ newk.onMessage((message) => {
 
 To manage connections with `NknConnect`:
 
-```javascript
+```js
 const nknConnect = await NknConnect.init(options)
 ```
 
